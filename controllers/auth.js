@@ -79,13 +79,14 @@ exports.signout = (req, res) => {
   });
 };
 
-// exports.isSignedIn = expressJwt({
-//   secret: process.env.SECRET,
-//   userProperty: "auth",
-// });
+exports.isSignedIn = expressJwt({
+  secret: process.env.SECRET,
+  userProperty: "auth",
+  algorithms: ["HS256"],
+});
 
 exports.isAuthenticated = (req, res, next) => {
-  let checked = req.profile && req.auth && req.profile.id == req.auth.id;
+  let checked = req.profile && req.auth && req.profile._id == req.auth._id;
   if (!checked) {
     return res.status(403).json({
       error: "ACCESS DENIED",
