@@ -27,5 +27,12 @@ exports.createCategory = (req, res) => {
 };
 
 exports.getAllCategories = (req, res) => {
-  Category.find;
+  Category.find.exec((err, cate) => {
+    if (err) {
+      return res.status(400).json({
+        err: "Can't create a category",
+      });
+    }
+    return res.json({ cate });
+  });
 };

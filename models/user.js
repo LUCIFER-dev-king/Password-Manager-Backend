@@ -1,6 +1,11 @@
 const crypto = require("crypto");
 const { v4: uuidv4 } = require("uuid");
 const mongoose = require("mongoose");
+const PasswordVault = require("./passwordVault");
+const NotesVault = require("./notesVault");
+const BankAccountVault = require("./bankAccountVault");
+const AddressVault = require("./addressVault");
+const PaymentCardVault = require("./paymentCardVault");
 const { Schema } = mongoose;
 
 var userSchema = new Schema(
@@ -26,6 +31,11 @@ var userSchema = new Schema(
       type: Number,
       defaul: 0,
     },
+    password_vault: [PasswordVault],
+    notes_vault: [NotesVault],
+    bank_account_vault: [BankAccountVault],
+    address_vault: [AddressVault],
+    payment_card_vault: [PaymentCardVault],
   },
   { timestamps: true }
 );

@@ -7,6 +7,11 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
+const passRoutes = require("./routes/passwordVault");
+const notesRoutes = require("./routes/notesVault");
+const addressRoutes = require("./routes/addressVault");
+const paymentCardRoutes = require("./routes/paymentCardVault");
+const bankAccountRoutes = require("./routes/bankAccountVault");
 
 mongoose
   .connect(process.env.DATABASE, {
@@ -29,6 +34,11 @@ app.use(bodyParser());
 
 app.use("/api", authRoutes);
 app.use("/api", userRoutes);
+app.use("/api", passRoutes);
+app.use("/api", notesRoutes);
+app.use("/api", addressRoutes);
+app.use("/api", paymentCardRoutes);
+app.use("/api", bankAccountRoutes);
 
 const port = process.env.PORT || 8000;
 
