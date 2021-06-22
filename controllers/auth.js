@@ -48,25 +48,25 @@ exports.signin = (req, res) => {
         err: "Email is invalid",
       });
     }
-    if (!user.authenticate(password)) {
-      return res.status(401).json({
-        err: "Email and password doesn't match",
-      });
-    }
+    // if (!user.authenticate(password)) {
+    //   return res.status(401).json({
+    //     err: "Email and password doesn't match",
+    //   });
+    // }
 
-    const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+    // const token = jwt.sign({ _id: user._id }, process.env.SECRET);
 
-    res.cookie("token", token, { expire: new Date() + 100 * 60 * 60 });
+    // res.cookie("token", token, { expire: new Date() + 100 * 60 * 60 });
 
-    const { _id, name, email, role } = user;
+    const { _id, name, email, salt, password } = user;
 
     return res.json({
-      token,
       user: {
         _id,
         name,
         email,
-        role,
+        salt,
+        password,
       },
     });
   });
