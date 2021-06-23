@@ -1,8 +1,23 @@
 const PasswordVault = require("../models/passwordVault");
 const User = require("../models/user");
 
-exports.getPasswordVaultById = (req, res, next) => {
-  //
+exports.getPasswordVaultById = (req, res, next, id) => {
+  const user = req.profile;
+  var passwordVault = user.password_vault.id(id);
+
+  if (passwordVault == null) {
+    res.status(400).json({
+      err: "Password not found",
+    });
+  }
+
+  req.passwordVault = passwordVault;
+
+  next();
+};
+
+exports.getAPasswordVault = (req, res) => {
+  return res.json(req.passwordVault);
 };
 
 exports.createPaaswordVault = (req, res) => {

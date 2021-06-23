@@ -8,21 +8,21 @@ var passwordVaultSchema = new Schema({
   },
   url: {
     type: String,
-    required: true,
+    // required: true,
   },
   name: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   username: {
     type: String,
-    required: true,
+    // required: true,
     trim: true,
   },
   site_password: {
     type: String,
-    required: true,
+    // required: true,
   },
 });
 

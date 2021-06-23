@@ -54,13 +54,14 @@ exports.signin = (req, res) => {
     //   });
     // }
 
-    // const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+    const token = jwt.sign({ _id: user._id }, process.env.SECRET);
 
-    // res.cookie("token", token, { expire: new Date() + 100 * 60 * 60 });
+    res.cookie("token", token, { expire: new Date() + 100 * 60 * 60 });
 
     const { _id, name, email, salt, password } = user;
 
     return res.json({
+      token,
       user: {
         _id,
         name,
