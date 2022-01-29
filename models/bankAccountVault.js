@@ -6,20 +6,20 @@ var bankAccountVaultSchema = Schema({
     type: String,
     ref: "category",
   },
-  name: {
+  vaultName: {
     type: String,
     trim: true,
     required: true,
   },
-  bank_name: {
+  bankName: {
     type: String,
     trim: true,
   },
-  account_type: {
+  accountType: {
     type: String,
     trim: true,
   },
-  account_number: {
+  accountNumber: {
     type: String,
     trim: true,
   },
@@ -27,11 +27,11 @@ var bankAccountVaultSchema = Schema({
     type: String,
     trim: true,
   },
-  micr_code: {
+  micrCode: {
     type: String,
     trim: true,
   },
-  customer_id: {
+  customerId: {
     type: String,
     trim: true,
   },

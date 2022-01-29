@@ -6,21 +6,21 @@ var passwordVaultSchema = new Schema({
     type: String,
     ref: "category",
   },
-  url: {
+  siteUrl: {
     type: String,
-    // required: true,
+    required: true,
   },
-  name: {
-    type: String,
-    // required: true,
-    trim: true,
-  },
-  username: {
+  vaultName: {
     type: String,
     // required: true,
     trim: true,
   },
-  site_password: {
+  siteUsername: {
+    type: String,
+    // required: true,
+    trim: true,
+  },
+  sitePassword: {
     type: String,
     // required: true,
   },

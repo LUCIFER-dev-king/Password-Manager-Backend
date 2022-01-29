@@ -6,7 +6,7 @@ var notesVaultSchema = Schema({
     type: String,
     ref: "category",
   },
-  name: {
+  vaultName: {
     type: String,
     trim: true,
     required: true,

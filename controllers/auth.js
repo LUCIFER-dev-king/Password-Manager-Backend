@@ -1,7 +1,9 @@
 const User = require("../models/user");
-var jwt = require("jsonwebtoken");
 var expressJwt = require("express-jwt");
 const { validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
+
+const { verifyJwt, signJwt } = require("../utils/authUtils");
 
 exports.signup = (req, res) => {
   const errors = validationResult(req);
@@ -48,33 +50,51 @@ exports.signin = (req, res) => {
         err: "Email is invalid",
       });
     }
-    // if (!user.authenticate(password)) {
-    //   return res.status(401).json({
-    //     err: "Email and password doesn't match",
-    //   });
-    // }
+    if (!user.authenticate(password)) {
+      return res.status(401).json({
+        err: "Email and password doesn't match",
+      });
+    }
 
-    const token = jwt.sign({ _id: user._id }, process.env.SECRET);
+    const accessToken = signJwt(user._id);
 
-    res.cookie("token", token, { expire: new Date() + 100 * 60 * 60 });
+    const refreshToken = signJwt(user._id);
 
-    const { _id, name, email, salt, password } = user;
+    if (req.origin === "chrome-extension://kghinbmpijahclnknpehcnikkgkfpkle") {
+      res.setHeader("set-cookie", [
+        `accessToken=${newAccessToken}; SameSite=None; Secure`,
+        `refreshToken=${refreshToken}; SameSite=None; Secure`,
+      ]);
+    } else {
+      res.cookie("accessToken", accessToken, {
+        maxAge: 120000,
+        httpOnly: true,
+        sameSite: "none",
+        secure: "true",
+      });
+      res.cookie("refreshToken", refreshToken, {
+        maxAge: 3.15e10,
+        httpOnly: true,
+        sameSite: "none",
+        secure: "true",
+      });
+    }
+
+    const { _id, name, email } = user;
 
     return res.json({
-      token,
       user: {
         _id,
         name,
         email,
-        salt,
-        password,
       },
     });
   });
 };
 
 exports.signout = (req, res) => {
-  res.clearCookie("token");
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
   res.json({
     message: "Signout is success",
   });
@@ -87,13 +107,42 @@ exports.isSignedIn = expressJwt({
 });
 
 exports.isAuthenticated = (req, res, next) => {
-  let checked = req.profile && req.auth && req.profile._id == req.auth._id;
-  if (!checked) {
+  const { accessToken, refreshToken } = req.cookies;
+
+  if (!accessToken) {
+    //If accessToken is expired, check refreshToken is valid and not expired.
+    const { payload: refresh } = verifyJwt(refreshToken);
+    if (refresh) {
+      const newAccessToken = signJwt(refresh._id);
+      if (
+        req.origin === "chrome-extension://kghinbmpijahclnknpehcnikkgkfpkle"
+      ) {
+        res.setHeader("set-cookie", [
+          `accessToken=${newAccessToken}; SameSite=None; Secure`,
+          `refreshToken=${refreshToken}; SameSite=None; Secure`,
+        ]);
+      } else {
+        res.cookie("accessToken", newAccessToken, {
+          maxAge: 120000,
+          httpOnly: true,
+        });
+      }
+      return next();
+    }
     return res.status(403).json({
-      error: "ACCESS DENIED",
+      error: "ACCESS IS NEEDED",
     });
   }
-  next();
+
+  //If accessToken is valid.
+  const { payload } = verifyJwt(accessToken);
+  if (payload) {
+    return next();
+  }
+
+  return res.status(403).json({
+    error: "ACCESS TOKEN IS INVALID",
+  });
 };
 
 exports.isAdmin = (req, res, next) => {

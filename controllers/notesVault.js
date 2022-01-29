@@ -15,6 +15,22 @@ exports.createNotesVault = (req, res) => {
   });
 };
 
+exports.updateNotesVault = (req, res) => {
+  const user = req.profile;
+  var notesVault = req.body;
+
+  user.password_vault.id(notesVault._id).remove();
+  user.password_vault.push(notesVault);
+
+  user.save((saveerr, saveresult) => {
+    if (!saveerr) {
+      return res.status(200).send(saveresult);
+    } else {
+      return res.status(400).send(saveerr.message);
+    }
+  });
+};
+
 exports.deleteNotesVault = (req, res) => {
   const user = req.profile;
   var notesVault = req.body;

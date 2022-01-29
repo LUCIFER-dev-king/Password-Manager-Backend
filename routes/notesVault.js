@@ -1,26 +1,19 @@
 const express = require("express");
-const { isSignedIn, isAuthenticated } = require("../controllers/auth");
+const { isAuthenticated } = require("../controllers/auth");
 const router = express.Router();
 const {
   createNotesVault,
   deleteNotesVault,
+  updateNotesVault,
 } = require("../controllers/notesVault");
 const { getUserById } = require("../controllers/user");
 
 router.param("userId", getUserById);
 
-router.put(
-  "/notes/create/:userId",
-  isSignedIn,
-  isAuthenticated,
-  createNotesVault
-);
+router.put("/notes/create/:userId", isAuthenticated, createNotesVault);
 
-router.delete(
-  "/notes/remove/:userId",
-  isSignedIn,
-  isAuthenticated,
-  deleteNotesVault
-);
+router.put("/notes/update/:userId", isAuthenticated, updateNotesVault);
+
+router.delete("/notes/remove/:userId", isAuthenticated, deleteNotesVault);
 
 module.exports = router;

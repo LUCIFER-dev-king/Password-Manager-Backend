@@ -5,6 +5,9 @@ const {
   deletePaaswordVault,
   getPasswordVaultById,
   getAPasswordVault,
+  updatePasswordVault,
+  getPasswordVaultByUrl,
+  getPasswordVaultByName,
 } = require("../controllers/passwordVault");
 const router = express.Router();
 const { getUserById } = require("../controllers/user");
@@ -14,23 +17,22 @@ router.param("passwordVaultId", getPasswordVaultById);
 
 router.get(
   "/password/:userId/:passwordVaultId",
-  isSignedIn,
   isAuthenticated,
   getAPasswordVault
 );
 
-router.put(
-  "/password/create/:userId",
-  isSignedIn,
+router.post("/password/:userId", isAuthenticated, getPasswordVaultByUrl);
+
+router.post(
+  "/password/search/:userId",
   isAuthenticated,
-  createPaaswordVault
+  getPasswordVaultByName
 );
 
-router.delete(
-  "/password/remove/:userId",
-  isSignedIn,
-  isAuthenticated,
-  deletePaaswordVault
-);
+router.put("/password/create/:userId", isAuthenticated, createPaaswordVault);
+
+router.put("/password/update/:userId", isAuthenticated, updatePasswordVault);
+
+router.delete("/password/remove/:userId", isAuthenticated, deletePaaswordVault);
 
 module.exports = router;

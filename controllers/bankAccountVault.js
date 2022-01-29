@@ -15,6 +15,22 @@ exports.createBankAccountVault = (req, res) => {
   });
 };
 
+exports.updateBankAccountVault = (req, res) => {
+  const user = req.profile;
+  var bankVault = req.body;
+
+  user.bank_account_vault.id(bankVault._id).remove();
+  user.bank_account_vault.push(bankVault);
+
+  user.save((saveerr, saveresult) => {
+    if (!saveerr) {
+      return res.status(200).send(saveresult);
+    } else {
+      return res.status(400).send(saveerr.message);
+    }
+  });
+};
+
 exports.deleteBankAccountVault = (req, res) => {
   const user = req.profile;
   var bankAccountVault = req.body;
