@@ -7,7 +7,7 @@ exports.signJwt = (id) => {
 
 exports.verifyJwt = (token) => {
   try {
-    const decoded = jwt.verify(token, process.env.SECRET);
+    const decoded = jwt.verify(token, "passwordmanager");
     return { payload: decoded, expired: false };
   } catch (e) {
     return { payload: null, expired: "jwt expired" };
