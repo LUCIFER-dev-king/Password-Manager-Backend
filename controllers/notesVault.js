@@ -19,8 +19,8 @@ exports.updateNotesVault = (req, res) => {
   const user = req.profile;
   var notesVault = req.body;
 
-  user.password_vault.id(notesVault._id).remove();
-  user.password_vault.push(notesVault);
+  user.notes_vault.id(notesVault._id).remove();
+  user.notes_vault.push(notesVault);
 
   user.save((saveerr, saveresult) => {
     if (!saveerr) {
