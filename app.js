@@ -11,16 +11,16 @@ const passRoutes = require("./routes/passwordVault");
 const notesRoutes = require("./routes/notesVault");
 const bankAccountRoutes = require("./routes/bankAccountVault");
 
-app.use(
-  cors({
-    origin: [
-      "chrome-extension://kghinbmpijahclnknpehcnikkgkfpkle",
-      "http://localhost:3000",
-    ],
+// app.use(
+//   cors({
+//     origin: [
+//       "chrome-extension://kghinbmpijahclnknpehcnikkgkfpkle",
+//       "http://localhost:3000",
+//     ],
 
-    credentials: true,
-  })
-);
+//     credentials: true,
+//   })
+// );
 app.use(
   cors({
     origin: true,
@@ -31,11 +31,14 @@ app.use(cookieParser());
 app.use(bodyParser());
 
 mongoose
-  .connect(process.env.DATABASE, {
-    useCreateIndex: true,
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
-  })
+  .connect(
+    "mongodb+srv://lucifer:EfgWCbZnVUzohpa2@cluster0.dpjkb.mongodb.net/pass?retryWrites=true&w=majority",
+    {
+      useCreateIndex: true,
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    }
+  )
   .then(() => {
     console.log("DB connected");
   });
