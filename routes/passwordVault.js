@@ -1,5 +1,5 @@
 const express = require("express");
-const { isSignedIn, isAuthenticated } = require("../controllers/auth");
+const { isAuthenticated } = require("../controllers/auth");
 const {
   createPaaswordVault,
   deletePaaswordVault,
