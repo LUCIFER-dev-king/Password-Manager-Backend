@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const verify = require("jsonwebtoken/verify");
 
 exports.signJwt = (id) => {
-  return jwt.sign({ _id: id }, process.env.SECRET);
+  return jwt.sign({ _id: id }, "passwordmanager");
 };
 
 exports.verifyJwt = (token) => {
