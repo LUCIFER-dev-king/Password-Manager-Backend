@@ -1,6 +1,3 @@
-const PasswordVault = require("../models/passwordVault");
-const User = require("../models/user");
-
 exports.getPasswordVaultById = (req, res, next, id) => {
   const user = req.profile;
   var passwordVault = user.password_vault.id(id);
@@ -37,19 +34,26 @@ exports.getPasswordVaultByUrl = (req, res) => {
 exports.getPasswordVaultByName = (req, res) => {
   const user = req.profile;
   const { vaultName } = req.body;
-  var vaultArray = [];
 
-  //TODO: Change to lowercase
-  const passVaultArray = user.password_vault.filter((pass) =>
+  passVaultArray = user.password_vault.filter((pass) =>
     pass.vaultName.includes(vaultName)
   );
 
-  // const notesVaultArray = user.notes_vault.filter((notes) =>
-  //   notes.vaultName.includes(vaultName)
-  // );
-  // console.log(user.notes_vault[0].vaultName);
+  const notesVaultArray = user.notes_vault.filter((notes) =>
+    notes.vaultName.includes(vaultName)
+  );
 
-  // vaultArray = passVaultArray.concat(notesVaultArray);
+  if (notesVaultArray.length !== 0) {
+    passVaultArray = passVaultArray.concat(notesVaultArray);
+  }
+
+  const bankVaultArray = user.bank_account_vault.filter((bank) =>
+    bank.vaultName.includes(vaultName)
+  );
+
+  if (bankVaultArray.length !== 0) {
+    passVaultArray = passVaultArray.concat(bankVaultArray);
+  }
 
   if (passVaultArray.length === 0) {
     res.status(400).json({
